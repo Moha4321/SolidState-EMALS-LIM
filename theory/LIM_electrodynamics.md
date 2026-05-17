@@ -54,3 +54,31 @@ $$ F_x = \frac{1}{2} \sigma V s v_s B_0^2 $$
 ## 5. Engineering Implications for PCB Design
 1.  **Thrust is proportional to the slip $s$:** Maximum thrust occurs at $v=0$ (startup), and thrust drops to zero as the projectile reaches the wave speed $v_s$.
 2.  **Thrust scales with the square of the magnetic field ($B_0^2$):** Therefore, the trace width in KiCad must be minimized to allow for maximum turns density, and the MOSFET inverter must handle high peak currents to maximize $B_0$.
+
+## 6. Kinematic Equation of Motion and Volume Cancellation
+To predict the physical trajectory of the aluminum rotor, we apply Newton's Second Law ($\Sigma F = ma$) in the axis of propagation ($x$).
+
+The mass of the rotor is given by $m = \rho V$, where $\rho$ is the density of the aluminum and $V$ is its volume. Substituting the time-averaged Lorentz force derived in Equation (9):
+
+$$ m \frac{dv}{dt} = \frac{1}{2} \sigma V s v_s B_0^2 $$
+$$ (\rho V) \frac{dv}{dt} = \frac{1}{2} \sigma V \left( \frac{v_s - v}{v_s} \right) v_s B_0^2 $$
+
+Notice that the volume $V$ exists on both sides of the equation and precisely cancels out:
+
+$$ \rho \frac{dv}{dt} = \frac{1}{2} \sigma (v_s - v) B_0^2 $$
+
+Rearranging for acceleration $\frac{dv}{dt}$:
+
+$$ \frac{dv}{dt} = \left( \frac{\sigma B_0^2}{2\rho} \right) (v_s - v) $$
+
+This reveals a profound engineering characteristic of the solid-state EMALS system: **In the idealized magnetic diffusion limit, the acceleration of the projectile is independent of its physical dimensions.** 
+
+Letting $\alpha = \frac{\sigma B_0^2}{2\rho}$, we have a first-order linear ordinary differential equation (ODE):
+
+$$ \frac{dv}{dt} + \alpha v = \alpha v_s $$
+
+Assuming the projectile starts from rest ($v(0) = 0$), the exact analytical solution to this ODE is:
+
+$$ v(t) = v_s \left( 1 - e^{-\alpha t} \right) $$
+
+This equation has been discretized and plotted in `simulations/kinematic_solver.py` to dictate the physical length required for the PCB stator in the hardware design phase.

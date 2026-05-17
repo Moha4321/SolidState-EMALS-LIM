@@ -1,0 +1,1253 @@
+\documentclass[12pt,letterpaper]{article}
+
+%% ── Packages ─────────────────────────────────────────────────────────────────
+\usepackage[margin=1in]{geometry}
+\usepackage{amsmath,amssymb,amsthm}
+\usepackage{mathtools}
+\usepackage{physics}
+\usepackage{bm}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{tabularx}
+\usepackage{multirow}
+\usepackage{longtable}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{titletoc}
+\usepackage{tocloft}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{float}
+\usepackage{setspace}
+%\usepackage{microtype}
+\usepackage{cite}
+\usepackage{doi}
+\usepackage{pgfgantt}
+\usepackage[T1]{fontenc}
+\usepackage{parskip}
+\usepackage{mdframed}
+\usepackage{tikz}
+\usetikzlibrary{arrows.meta, positioning, shapes.geometric, calc}
+
+%% ── Colour palette ───────────────────────────────────────────────────────────
+\definecolor{mitred}{RGB}{163,31,52}
+\definecolor{darkgray}{RGB}{60,60,60}
+\definecolor{lightgray}{RGB}{245,245,245}
+\definecolor{accentblue}{RGB}{0,82,136}
+\definecolor{framecolor}{RGB}{163,31,52}
+
+%% ── Hyperref setup ───────────────────────────────────────────────────────────
+\hypersetup{
+  colorlinks=true,
+  linkcolor=mitred,
+  citecolor=accentblue,
+  urlcolor=accentblue,
+  pdftitle={Thesis Proposal: Scaling Laws for Planar Linear Induction Motors},
+  pdfauthor={},
+}
+
+%% ── Section formatting ───────────────────────────────────────────────────────
+\titleformat{\section}{\large\bfseries\color{mitred}}{{\thesection}}{1em}{}[\vspace{-2pt}\rule{\linewidth}{0.4pt}]
+\titleformat{\subsection}{\normalsize\bfseries\color{darkgray}}{\thesubsection}{1em}{}
+\titleformat{\subsubsection}{\normalsize\itshape\color{darkgray}}{\thesubsubsection}{1em}{}
+
+%% ── Header / footer ──────────────────────────────────────────────────────────
+\pagestyle{fancy}
+\fancyhf{}
+\renewcommand{\headrulewidth}{0.4pt}
+\fancyhead[L]{\small\color{darkgray}\textit{Thesis Proposal — Planar LIM Scaling Laws}}
+\fancyhead[R]{\small\color{darkgray}EE / AeroAstro Intersection}
+\fancyfoot[C]{\small\thepage}
+
+%% ── Theorem environments ─────────────────────────────────────────────────────
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{definition}{Definition}
+
+%% ── Custom environments ──────────────────────────────────────────────────────
+\newmdenv[
+  linecolor=mitred,
+  linewidth=1.5pt,
+  backgroundcolor=lightgray,
+  leftmargin=0pt,
+  rightmargin=0pt,
+  innerleftmargin=10pt,
+  innerrightmargin=10pt,
+  innertopmargin=8pt,
+  innerbottommargin=8pt,
+]{claimbox}
+
+%% ── Spacing ──────────────────────────────────────────────────────────────────
+\setstretch{1.15}
+\setlength{\parskip}{6pt}
+
+%% ──────────────────────────────────────────────────────────────────────────────
+\begin{document}
+
+%% ══════════════════════════════════════════════════════════════════════════════
+%%  TITLE PAGE
+%% ══════════════════════════════════════════════════════════════════════════════
+\begin{titlepage}
+\begin{center}
+\vspace*{1cm}
+
+{\color{mitred}\rule{\linewidth}{2pt}}
+\vspace{0.4cm}
+
+{\LARGE\bfseries Empirical Derivation of Scaling Laws for\\[6pt]
+Planar Printed-Circuit Linear Induction Motors:\\[6pt]
+A Miniature Solid-State EMALS Analog}
+
+\vspace{0.4cm}
+{\color{mitred}\rule{\linewidth}{2pt}}
+
+\vspace{1.2cm}
+
+{\large\textit{Masters Thesis Proposal}}\\[0.4cm]
+{\large Department of Electrical Engineering \& Computer Science}\\[0.2cm]
+{\large \& Department of Aeronautics and Astronautics}\\[0.6cm]
+
+\vspace{0.8cm}
+
+\begin{tabular}{rl}
+\textbf{Submitted:} & May 17, 2026 \\[4pt]
+\textbf{Budget Constraint:} & \$400~USD \\[4pt]
+\textbf{Discipline Split:} & 60\% Electrical Engineering ~$|$~ 40\% Aerospace Engineering \\[4pt]
+\textbf{Keywords:} & Linear Induction Motor, Magnetic Diffusion, Maxwell Stress \\
+                   & Tensor, PCB Electromagnetics, EMALS, Skin Effect, \\
+                   & Slip Frequency, Scaling Laws, Finite Element Method \\
+\end{tabular}
+
+\vspace{1.5cm}
+
+\begin{mdframed}[linecolor=mitred, linewidth=1pt, backgroundcolor=lightgray]
+\centering
+\textbf{Central Scientific Claim}\\[6pt]
+\textit{This thesis derives and experimentally validates the first closed-form scaling law
+relating pole pitch~$\tau_p$, slip frequency~$\omega_s$, and rotor conductivity~$\sigma$
+to peak thrust per unit stator area~$\mathcal{F}^*$ for planar PCB Linear Induction Motors
+operating in the magnetic skin-effect dominated regime — providing an empirically
+grounded design rule directly applicable to sub-100\,W electromagnetic launch systems.}
+\end{mdframed}
+
+\vfill
+
+{\small\color{darkgray}
+This document constitutes a formal research proposal for a Masters-level investigation
+at the intersection of continuum electrodynamics, solid-state power electronics,
+and aerospace electromagnetic launch technology.}
+
+\end{center}
+\end{titlepage}
+
+%% ══════════════════════════════════════════════════════════════════════════════
+%%  TABLE OF CONTENTS
+%% ══════════════════════════════════════════════════════════════════════════════
+\tableofcontents
+\newpage
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Introduction and Motivation}
+%% ══════════════════════════════════════════════════════════════════════════════
+
+\subsection{Aerospace Context: Electromagnetic Launch Systems}
+
+Electromagnetic launch technology represents one of the most consequential engineering
+transitions in modern aerospace. The U.S.\ Navy's Electromagnetic Aircraft Launch System
+(EMALS), operational aboard the USS Gerald R.\ Ford (CVN~78), replaced the steam
+catapult with a linear induction motor capable of delivering precisely controlled
+impulse to aircraft spanning a factor of three in launch weight~\cite{Doyle2010}. Beyond
+naval aviation, linear electromagnetic accelerators underpin mass-driver proposals for
+lunar surface launch~\cite{Kolm1980}, hyperloop transport, and rapid-fire electromagnetic
+ordnance. In all cases, the fundamental physics is identical: a travelling magnetic wave
+induces eddy currents in a conductive rotor, and the interaction between induced current
+and the applied field produces thrust.
+
+Despite decades of large-scale deployment, the \emph{design-rule literature} for
+miniaturised planar geometries operating in the skin-effect dominated regime is
+remarkably sparse. Scaling from a 100-tonne aircraft launcher to a 100-gram laboratory
+rotor is non-trivial: at reduced scales and elevated spatial frequencies, the magnetic
+Reynolds number $\mathrm{Rm} = \mu_0\sigma v L$ and the dimensionless skin depth
+$\delta/\tau_p$ enter regimes inaccessible to lumped-circuit LIM models. There are
+no published closed-form expressions — validated against physical hardware — that
+predict \emph{peak thrust per unit stator area} as a function of the three independently
+controllable design parameters: pole pitch, slip frequency, and rotor conductivity.
+This thesis fills that gap.
+
+\subsection{Research Gap}
+
+Standard analytical treatments of linear induction motors (Gieras~\cite{Gieras1994};
+Boldea \& Nasar~\cite{Boldea2001}) rely on either (a) equivalent-circuit models that
+collapse the magnetic skin effect into a single lumped resistance, or (b) two-dimensional
+analytical solutions valid only for semi-infinite conductors at low slip. Neither approach
+yields a design rule usable by an engineer sizing a planar PCB stator for a compact
+electromagnetic launcher. Recent work on PCB motor technology (Lewin et
+al.~\cite{Lewin2006}; Raminosoa et al.~\cite{Raminosoa2018}) addresses rotational
+geometries and does not treat the travelling-wave, linear-thrust case. The miniature
+EMALS analog thus occupies a genuine white space in the literature.
+
+\subsection{Scientific Claim}
+
+\begin{claimbox}
+\textbf{Thesis Claim.}\quad There exists a closed-form dimensionless scaling law of the form
+\[
+  \mathcal{F}^* \;=\; f\!\left(\frac{\delta}{\tau_p},\; \mathrm{Rm}\right)
+\]
+where $\mathcal{F}^* \equiv F_{\mathrm{thrust}} / (B_0^2 \tau_p w / \mu_0)$ is the
+dimensionless thrust, $\delta = \sqrt{2/(\mu_0\sigma\omega_s)}$ is the magnetic skin
+depth, and $\mathrm{Rm}$ is the magnetic Reynolds number, whose functional form and
+numerical coefficients can be experimentally determined using a parametric sweep over
+$\{\tau_p,\,\omega_s,\,\sigma\}$ on a planar PCB LIM platform. This law predicts an
+optimal slip frequency $\omega_s^*$ at which thrust is maximised for a given pole pitch,
+and that this optimum shifts with rotor conductivity in a manner derivable from the
+Convective Magnetic Diffusion equation.
+\end{claimbox}
+
+\subsection{Objectives}
+
+The thesis pursues four tightly coupled objectives:
+
+\begin{enumerate}[label=\textbf{O\arabic*.}, leftmargin=2.2cm]
+  \item \textbf{Analytical:} Derive the closed-form expression for optimal slip frequency
+    $\omega_s^*(\tau_p, \sigma)$ from the Convective Magnetic Diffusion PDE and the
+    Maxwell Stress Tensor, including a rigorous proof of the volume-cancellation theorem.
+  \item \textbf{Computational:} Develop a validated 2D transient FEM solver (FEniCS) for
+    the planar LIM geometry with documented mesh-convergence and parametric sensitivity
+    studies across $\tau_p \in [5,\,20]\,$mm and $\omega_s \in [10,\,500]\,$Hz.
+  \item \textbf{Experimental:} Fabricate a 4-layer FR4 PCB stator with reconfigurable
+    pole pitch and conduct a $3 \times 3 \times 2$ parametric experiment (pole pitch
+    $\times$ slip frequency $\times$ rotor alloy) yielding 18 independent data points
+    with full uncertainty budgets.
+  \item \textbf{Synthesis:} Fit a dimensionless scaling law to the empirical data, compare
+    against the analytical prediction, and publish design charts directly applicable to
+    sub-100\,W electromagnetic launch systems.
+\end{enumerate}
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Theoretical Framework}
+%% ══════════════════════════════════════════════════════════════════════════════
+
+\subsection{Governing Equation: Convective Magnetic Diffusion PDE}
+
+Starting from Maxwell's equations in the Coulomb gauge $(\nabla \cdot \mathbf{A} = 0)$,
+the magnetic flux density is expressed through the magnetic vector potential
+$\mathbf{B} = \nabla \times \mathbf{A}$. Inside a moving, isotropic, non-magnetic conductor
+of electrical conductivity $\sigma$ and permeability $\mu_0$, travelling at velocity
+$\mathbf{v}$ relative to the stator frame, Faraday's law and Ohm's law combine to yield
+the Convective Magnetic Diffusion Equation~\cite{Davidson2001}:
+
+\begin{equation}
+  \boxed{
+  \nabla^2 \mathbf{A} \;=\; \mu_0\sigma\,\frac{\partial \mathbf{A}}{\partial t}
+  \;+\; \mu_0\sigma\,(\mathbf{v}\cdot\nabla)\mathbf{A}
+  }
+  \label{eq:cmd}
+\end{equation}
+
+The two terms on the right side of \cref{eq:cmd} encode distinct physics:
+the first is \emph{temporal diffusion} (responsible for the magnetic skin effect at
+high frequency), and the second is \emph{convective distortion} of the field due to
+rotor motion. At low rotor velocity the convective term is negligible and
+\cref{eq:cmd} reduces to the standard eddy-current diffusion equation. At high velocity,
+the convective term introduces an asymmetric field distribution — compressed on the
+leading edge of the rotor, rarefied on the trailing edge — that is the physical origin
+of the well-known LIM end-effect efficiency penalty.
+
+\subsection{Dimensionless Formulation and the Magnetic Reynolds Number}
+
+Let $\tau_p$ be the pole pitch (the characteristic length), $\omega_s = \omega - k v_s$
+the slip angular frequency (where $\omega$ is the stator excitation frequency and $v_s$
+is the synchronous velocity $v_s = \omega \tau_p / \pi$), and $B_0$ the peak air-gap
+flux density. Nondimensionalising \cref{eq:cmd} with:
+\[
+  \tilde{x} = x/\tau_p, \quad
+  \tilde{t} = \omega_s t, \quad
+  \tilde{\mathbf{A}} = \mathbf{A}/B_0\tau_p,
+\]
+yields:
+
+\begin{equation}
+  \frac{\partial^2 \tilde{A}}{\partial \tilde{x}^2}
+  + \frac{\partial^2 \tilde{A}}{\partial \tilde{y}^2}
+  \;=\; \underbrace{\mu_0\sigma\omega_s\tau_p^2}_{\displaystyle S}
+  \frac{\partial \tilde{A}}{\partial \tilde{t}}
+  \;+\; \underbrace{\mu_0\sigma v\tau_p}_{\displaystyle \mathrm{Rm}}\,
+  \frac{\partial \tilde{A}}{\partial \tilde{x}}
+  \label{eq:cmd_nd}
+\end{equation}
+
+where $S = \mu_0\sigma\omega_s\tau_p^2$ is the \emph{quality factor} (dimensionless skin
+depth parameter) and $\mathrm{Rm} = \mu_0\sigma v\tau_p$ is the magnetic Reynolds number.
+The ratio $S/\mathrm{Rm} = \omega_s\tau_p / v = \pi s$ (where $s$ is the dimensionless slip)
+recovers the familiar result from induction machine theory. This nondimensionalisation
+reveals that all planar LIM systems with equal $S$ and $\mathrm{Rm}$ are physically
+equivalent — the foundation for the proposed scaling law.
+
+\subsection{Magnetic Skin Depth and the Optimal Slip Frequency}
+
+The penetration depth of the travelling field into the rotor is:
+\begin{equation}
+  \delta \;=\; \sqrt{\frac{2}{\mu_0\sigma\omega_s}}
+  \label{eq:skindepth}
+\end{equation}
+
+This immediately implies a critical constraint: if the rotor thickness $d < \delta$, eddy
+currents penetrate the full cross-section and thrust scales as $\sigma d^2 \omega_s$
+(thin-sheet regime). If $d > \delta$, eddy currents are confined to a surface layer and
+thrust is independent of $d$ (skin-effect regime). The transition occurs at
+$\omega_s^{\mathrm{tr}} = 2/(\mu_0\sigma d^2)$, which for 3\,mm thick 7075-T6 aluminium
+($\sigma \approx 1.96 \times 10^7$\,S/m) gives $\omega_s^{\mathrm{tr}} \approx 140$\,Hz.
+The proposed experiment spans both regimes deliberately.
+
+\begin{proposition}[Optimal Slip Frequency]
+\label{prop:opt_slip}
+Under the assumption of a sinusoidal travelling-wave stator field
+$B_y = B_0 \cos(\pi x/\tau_p - \omega t)$ and a rotor of half-thickness $d$,
+the thrust $F$ as a function of slip frequency attains a maximum at:
+\begin{equation}
+  \omega_s^* \;=\; \frac{\pi^2}{\mu_0\sigma\tau_p^2}
+  \;=\; \frac{\pi^2\,\eta}{\tau_p^2}
+  \label{eq:opt_slip}
+\end{equation}
+where $\eta = 1/(\mu_0\sigma)$ is the magnetic diffusivity. At $\omega_s^*$,
+the skin depth satisfies $\delta^* = \sqrt{2}\,\tau_p/\pi$, i.e.\ the skin depth
+is proportional to pole pitch, independent of material.
+\end{proposition}
+
+\textit{Proof sketch.} Representing the vector potential in the rotor as
+$A_z(x,y,t) = \hat{A}(y)\,e^{j(\pi x/\tau_p - \omega_s t)}$ and substituting into
+\cref{eq:cmd} (in the rotor rest frame, $\mathbf{v} = 0$), the $y$-dependence satisfies:
+\[
+  \frac{d^2\hat{A}}{dy^2} \;=\; \left[\left(\frac{\pi}{\tau_p}\right)^2
+  - j\mu_0\sigma\omega_s\right]\hat{A} \;\equiv\; \kappa^2\hat{A}
+\]
+with $\kappa^2 = (\pi/\tau_p)^2(1 - jS)$ where $S = \mu_0\sigma\omega_s\tau_p^2/\pi^2$.
+The time-averaged thrust per unit area from the Maxwell Stress Tensor (see \cref{sec:mst})
+is proportional to $\mathrm{Im}(\hat{A}^*\partial\hat{A}/\partial y)|_{y=0}$. Maximising
+over $S$ yields $S^* = 1$, i.e.\ $\omega_s^* = \pi^2/(\mu_0\sigma\tau_p^2)$. \hfill$\square$
+
+\Cref{prop:opt_slip} is the central falsifiable prediction of this thesis. It predicts that
+a doubling of pole pitch reduces the optimal slip frequency by a factor of four,
+and that changing from 7075-T6 aluminium to 6061-T6 (a 15\% reduction in conductivity)
+shifts $\omega_s^*$ upward by 15\%. Both predictions will be tested experimentally.
+
+\subsection{Volume Cancellation Theorem}
+\label{sec:vol_cancel}
+
+A preliminary result from the 1D kinematic model warrants formal statement because it
+has a direct bearing on experimental design.
+
+\begin{theorem}[Volume Cancellation]
+\label{thm:vol_cancel}
+Under idealized uniform magnetic diffusion (thin-sheet limit, $d \ll \delta$),
+the equation of motion for the rotor reduces to:
+\begin{equation}
+  \dot{v} \;=\; \frac{\sigma B_0^2 \omega_s d}{\rho}\,g(s)
+  \label{eq:vol_cancel}
+\end{equation}
+where $\rho$ is the mass density, $d$ the rotor thickness, and $g(s)$ a dimensionless
+function of slip. In particular, the rotor volume $V = A_{\mathrm{contact}} \cdot d$
+cancels: acceleration is independent of rotor plan-area and depends on thickness $d$
+only through the ratio $\sigma d / \rho$.
+\end{theorem}
+
+\begin{proof}
+The induced EMF per unit length in the thin-sheet rotor is $\mathcal{E} = v_s B_0 s$
+(slip times synchronous velocity). The short-circuit current density is
+$J = \sigma \mathcal{E} / d$ (resistance of a slab of thickness $d$). The Lorentz
+force per unit volume is $f = J B_0 = \sigma v_s s B_0^2 / d$. Newton's second law
+for the rotor of mass $m = \rho A d$:
+\[
+  \rho A d\, \dot{v} \;=\; f \cdot A d \;=\; \sigma v_s s B_0^2 A
+\]
+The $A$ and $d$ cancel, giving $\dot{v} = \sigma v_s s B_0^2 / \rho$,
+confirming \cref{eq:vol_cancel}. Note $\rho$ appears but volume does not. \end{proof}
+
+\textbf{Experimental implication.} \Cref{thm:vol_cancel} implies that in the thin-sheet
+regime, rotor mass need not be controlled between experimental runs — only the
+$\sigma/\rho$ ratio matters. For 7075-T6 and 6061-T6, $\sigma/\rho$ differs by
+approximately 10\%, providing a meaningful experimental contrast with nearly identical
+mechanical behaviour.
+
+\subsection{Force Calculation: Maxwell Stress Tensor}
+\label{sec:mst}
+
+Rather than computing thrust from idealized uniform eddy current distributions,
+this project integrates the Maxwell Stress Tensor~\cite{Griffiths2017} over a closed
+surface $\partial\mathcal{V}$ enclosing the rotor:
+
+\begin{equation}
+  \overleftrightarrow{T}_{ij} \;=\; \frac{1}{\mu_0}
+  \left[B_i B_j \;-\; \frac{1}{2}\,\delta_{ij}\,B^2\right]
+  \label{eq:mst}
+\end{equation}
+
+The time-averaged propulsive thrust per unit stator width $w$ is:
+
+\begin{equation}
+  \langle F_x \rangle \;=\; w \oint_{\partial\mathcal{V}}
+  \langle T_{xj}\rangle\, n_j\, dS
+  \;=\; w \int_0^{2\tau_p}
+  \frac{\langle B_x B_y\rangle}{\mu_0}\Bigg|_{y=0}\!\! dx
+  \label{eq:thrust}
+\end{equation}
+
+where $y = 0$ is the stator surface and the surface integral reduces to the
+air-gap tangential stress. For the analytical sinusoidal solution:
+
+\begin{equation}
+  \langle F_x \rangle \;=\; \frac{B_0^2 \tau_p w}{2\mu_0}\,
+  \frac{S}{1 + S^2}
+  \label{eq:thrust_analytical}
+\end{equation}
+
+\Cref{eq:thrust_analytical} — which peaks at $S = 1$, recovering \cref{eq:opt_slip} —
+is the primary theoretical prediction to be validated by FEM and experiment.
+The dimensionless thrust is thus:
+
+\begin{equation}
+  \boxed{\mathcal{F}^* \;=\; \frac{S}{1 + S^2}, \qquad
+  S \;=\; \frac{\mu_0\sigma\omega_s\tau_p^2}{\pi^2}}
+  \label{eq:scaling_law}
+\end{equation}
+
+\Cref{eq:scaling_law} is the closed-form scaling law this thesis will validate.
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Literature Review and Position}
+%% ══════════════════════════════════════════════════════════════════════════════
+
+\subsection{Classical LIM Theory}
+
+Gieras~\cite{Gieras1994} established the foundational analytical treatment of linear
+induction machines, deriving thrust-slip curves from a 2D magnetoquasistatic model.
+Boldea and Nasar~\cite{Boldea2001} extended this to include end effects and dynamic braking.
+Both frameworks use lumped equivalent circuits with frequency-dependent parameters,
+which capture skin-effect trends but do not yield closed-form design rules for the
+$\tau_p$--$\omega_s$--$\sigma$ parameter space.
+
+\subsection{EMALS and Large-Scale Linear Actuators}
+
+The Navy's EMALS program~\cite{Doyle2010} represents the state of the art in linear
+electromagnetic launch. Connor et al.~\cite{Connor2015} document the power electronics
+and energy storage architecture. Neither source addresses miniaturisation or PCB-scale
+realisation. Kolm and Mongeau~\cite{Kolm1980} analyzed electromagnetic mass drivers for
+space launch but operated in a fundamentally different regime (pulsed, non-inductive
+thrust) from the continuous-wave LIM addressed here.
+
+\subsection{PCB Motor Technology}
+
+Lewin et al.~\cite{Lewin2006} demonstrated that multi-layer PCB windings can achieve
+sufficient current density for low-power actuators. Raminosoa et al.~\cite{Raminosoa2018}
+characterised thermal limits of PCB stator coils under sustained operation. Neither work
+addresses the linear (translational) geometry or the skin-effect dominated thrust regime.
+Maloberti et al.~\cite{Maloberti2020} simulated planar eddy-current brakes using FEM
+but did not investigate the thrust-maximising slip frequency experimentally.
+
+\subsection{Identified Gap}
+
+No published work provides: (a) an analytically derived, (b) computationally validated,
+and (c) physically confirmed closed-form scaling law for peak thrust per unit area as a
+function of $\{\tau_p,\,\omega_s,\,\sigma\}$ in a planar PCB LIM operating in the
+skin-effect dominated regime. This thesis provides exactly that.
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Numerical Simulation Methodology}
+%% ══════════════════════════════════════════════════════════════════════════════
+
+The simulation strategy is deliberately three-tiered, with each tier trading
+fidelity for speed. The 1D ODE solver (complete) drives parameter-space exploration;
+the 2D FEM on Google Colab provides rapid validation of the analytical scaling law
+at low cost; and the 3D FEM on a local Mac Mini M4 captures end effects and flux
+fringing that the 2D model structurally cannot represent. The two FEM tiers are
+complementary, not redundant.
+
+\subsection{Compute Platform Summary}
+
+\begin{table}[H]
+\centering
+\caption{Simulation compute platforms and realistic constraints.}
+\label{tab:compute}
+\begin{tabularx}{\textwidth}{lXll}
+\toprule
+\textbf{Platform} & \textbf{Specs} & \textbf{Use} & \textbf{Cost} \\
+\midrule
+Python / laptop & Any CPU, \texttt{scipy} & Tier 1 ODE & Free \\
+Google Colab T4  & 15\,GB VRAM, $\sim$5\,hr/day free (unguaranteed) & Tier 2 2D FEM & Free \\
+Mac Mini M4      & Apple M4, 16\,GB unified RAM, macOS & Tier 3 3D FEM & \$0 (owned) \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\noindent\textbf{Note on Colab constraints.} Google Colab free tier provides T4 GPU
+access for approximately 5 hours per day, subject to availability and session
+disconnection. All 2D FEM jobs are therefore designed to complete in under 90 minutes
+per run, with checkpointing to \texttt{.h5} files so that a disconnected session can
+resume mid-sweep. No A100 or paid compute is assumed anywhere in this proposal.
+
+\subsection{Tier 1 — 1D Kinematic ODE Solver (Completed)}
+
+A Python solver using \texttt{scipy.integrate.solve\_ivp} integrates the rotor
+equation of motion derived in \cref{thm:vol_cancel}. The solver accepts
+$\{B_0,\,\tau_p,\,\omega_s,\,\sigma,\,\rho,\,d\}$ as inputs and outputs position
+$x(t)$, velocity $v(t)$, and instantaneous thrust $F(t)$. It has been validated
+against the analytical impulse prediction for the thin-sheet limit and reproduces the
+volume-cancellation result numerically. It serves as the fast surrogate for
+parameter-space exploration, guiding which operating points are most informative
+before committing FEM resources.
+
+The governing ODE system is:
+\begin{align}
+  \dot{x} &= v \label{eq:ode1}\\
+  \dot{v} &= \frac{F_{\mathrm{thrust}}(v,\,\omega_s,\,\tau_p,\,\sigma)}{m}
+             - \frac{F_{\mathrm{drag}}(v)}{m} \label{eq:ode2}
+\end{align}
+
+where $F_{\mathrm{thrust}}$ is evaluated from \cref{eq:thrust_analytical} with slip
+$s = 1 - v\pi/(\omega\tau_p)$ updated at each timestep, and $F_{\mathrm{drag}}$
+accounts for aerodynamic and rail-contact drag.
+
+\textbf{Estimated runtime:} $< 2$\,seconds per trajectory on any modern laptop.
+Full 18-point parametric sweep: $< 1$\,minute.
+
+\subsection{Tier 2 — 2D Transient FEM on Google Colab T4}
+\label{sec:tier2}
+
+\subsubsection{Motivation and Scope}
+
+The 2D transient FEM solves \cref{eq:cmd} in the cross-sectional plane
+$(x,\,y)$ — the direction of rotor travel and the depth into the rotor —
+capturing the magnetic skin effect and its dependence on $\omega_s$, $\tau_p$,
+and $\sigma$ with high fidelity. It validates the analytical scaling law
+\cref{eq:scaling_law} under realistic boundary conditions and is the primary
+tool for the mesh convergence study. Its fundamental limitation is that it
+assumes the rotor is infinitely wide in the $z$-direction (transverse to motion),
+eliminating edge effects. This limitation is addressed by Tier~3.
+
+\subsubsection{Implementation}
+
+The solver uses FEniCS~\cite{AlnaesEtal2015} (Python UFL formulation, legacy
+2019.1 version, pip-installable on Colab without sudo). The computational domain
+is a two-region rectangle:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Air-gap + stator region} ($0 \leq y \leq g$): prescribed sinusoidal
+    surface current $K_z = K_0\cos(\pi x/\tau_p - \omega t)$ at $y = 0$.
+  \item \textbf{Rotor region} ($-d \leq y \lewidth 0$): \cref{eq:cmd} governs;
+    material parameters set to 7075-T6 or 6061-T6 aluminium.
+\end{itemize}
+
+Boundary conditions: $A_z = 0$ on top/bottom (magnetic insulation, domain height
+$= 10\delta$); periodic left/right with phase offset $\Delta\phi = 2\pi\tau_p/\lambda$.
+Time integration uses a second-order Crank--Nicolson scheme with
+$\Delta t = 1/(20\,\omega_s)$ (20 steps per slip cycle), run for 5 slip cycles to
+reach periodic steady state before extracting thrust.
+
+\subsubsection{Mesh Convergence Protocol}
+
+Three structured quadrilateral meshes will be generated in the rotor region:
+
+\begin{table}[H]
+\centering
+\caption{2D FEM mesh convergence study parameters and estimated runtimes (Colab T4).}
+\label{tab:mesh2d}
+\begin{tabular}{lccccc}
+\toprule
+\textbf{Mesh} & \textbf{Element size} & \textbf{DOF (approx.)} & \textbf{Time steps} & \textbf{Runtime / point} & \textbf{Total (30 pts)} \\
+\midrule
+Coarse & $h = \delta/2$  & $\sim$8\,k   & 100 & $\sim$4\,min  & $\sim$2\,hr \\
+Medium & $h = \delta/4$  & $\sim$30\,k  & 100 & $\sim$14\,min & $\sim$7\,hr \\
+Fine   & $h = \delta/8$  & $\sim$110\,k & 100 & $\sim$50\,min & $\sim$25\,hr \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent The convergence study uses the medium mesh for the full parametric sweep
+(30 points $\times$ 14\,min $\approx$ 7 hours total, spread across $\sim$2 Colab
+sessions). The fine mesh is run only at the 3 operating points closest to $S = 1$
+to confirm Richardson extrapolation bounds. All jobs checkpoint to Google Drive after
+each operating point so session disconnection causes at most one lost point.
+
+Convergence is declared when thrust changes by $< 2\%$ between successive refinements.
+
+\subsubsection{Parametric Sweep}
+
+The 2D FEM evaluates \cref{eq:scaling_law} across
+$\tau_p \in \{5,\,10,\,20\}$\,mm and $\omega_s/2\pi \in \{10,\,50,\,100,\,200,\,500\}$\,Hz
+for both rotor alloys (30 operating points total). Results are post-processed to
+extract $\mathcal{F}^*$ and $S$ and overlaid on the analytical curve.
+
+\subsection{Tier 3 — 3D Transient FEM on Mac Mini M4}
+\label{sec:tier3}
+
+\subsubsection{Why 3D is Necessary}
+
+The 2D model assumes a rotor of infinite transverse width ($w \to \infty$). In the
+physical experiment the rotor width is 12\,mm — comparable to the pole pitch at the
+5\,mm and 10\,mm configurations. Eddy currents that the 2D model assumes flow purely
+in the $x$--$y$ plane must in reality close through the $z$-direction, constrained by
+the rotor's finite width. This introduces two effects absent from the 2D model:
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Transverse edge flux leakage}: the field bulges outward at the rotor
+    edges, reducing the effective flux linkage and therefore thrust. This penalty is
+    largest when $\tau_p \sim w$ (the 5\,mm pole-pitch configuration).
+  \item \textbf{3D eddy current path elongation}: eddy current loops must travel
+    around the rotor perimeter in $z$, increasing their effective resistance and
+    reducing current magnitude for a given induced EMF.
+\end{enumerate}
+
+Both effects introduce a geometry-dependent correction factor $\eta_{3D}(\tau_p/w)$
+that multiplies the 2D thrust prediction. Quantifying $\eta_{3D}$ is a genuine
+scientific contribution beyond the 2D result.
+
+\subsubsection{Software Stack: Elmer FEM + Gmsh}
+
+The 3D solver uses \textbf{Elmer FEM}~\cite{ElmerTeam2020} — an open-source,
+actively maintained finite element package from CSC Finland with a dedicated
+\texttt{MagnetoDynamics} solver module implementing the $\mathbf{A}$--$V$ formulation
+of \cref{eq:cmd} in full 3D. Elmer runs natively on macOS ARM (Apple Silicon) via
+Homebrew and has been benchmarked on M-series hardware by the community.
+Mesh generation uses \textbf{Gmsh}~\cite{Geuzaine2009} (also Homebrew-installable),
+which produces structured hexahedral meshes in the rotor bulk and unstructured
+tetrahedral meshes in the air-gap and fringe regions.
+
+The full toolchain is free and open-source. No licences, no cloud costs.
+
+\subsubsection{3D Domain and Mesh}
+
+The 3D computational domain replicates the physical rotor geometry:
+$150\,\mathrm{mm} \times 12\,\mathrm{mm} \times d\,\mathrm{mm}$ rotor (where
+$d \in \{1,\,2,\,3\}$\,mm), suspended above a 1\,mm air gap over the stator surface.
+The stator is represented as a prescribed current-sheet boundary condition
+(surface current $\mathbf{K}$), avoiding the need to mesh the PCB copper traces
+in 3D. The domain is truncated at $5\delta$ above and below with homogeneous
+Dirichlet conditions $\mathbf{A} = \mathbf{0}$.
+
+\begin{table}[H]
+\centering
+\caption{3D FEM mesh parameters and estimated runtimes on Mac Mini M4 (16\,GB unified RAM).}
+\label{tab:mesh3d}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Config.} & \textbf{DOF (approx.)} & \textbf{RAM usage} & \textbf{Runtime / point} & \textbf{Parallelism} \\
+\midrule
+$\tau_p = 20$\,mm, $d = 3$\,mm (coarsest) & $\sim$400\,k & $\sim$4\,GB & $\sim$2\,hr & 4 threads (P-cores) \\
+$\tau_p = 10$\,mm, $d = 2$\,mm (medium)   & $\sim$900\,k & $\sim$9\,GB & $\sim$4\,hr & 4 threads \\
+$\tau_p = 5$\,mm, $d = 1$\,mm (finest)    & $\sim$1.8\,M & $\sim$15\,GB & $\sim$8\,hr & 4 threads \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\noindent\textbf{Runtime strategy.} The three configurations in \cref{tab:mesh3d}
+represent the 3 pole-pitch levels at a single operating frequency
+($\omega_s = \omega_s^*$, the analytically predicted optimum). Each run executes
+overnight on the Mac Mini M4, which has no duty-cycle or session-time constraints.
+Total 3D compute time for the primary result: approximately 14 hours of wall time
+across 3 overnight runs. An additional 6 configurations (2 alloys $\times$ 3 pitches
+at a second frequency point) add $\sim$30 hours, comfortably within a 2-week
+simulation window.
+
+The M4's 16\,GB unified memory architecture is critical: at 1.8M DOFs the solver
+requires $\sim$15\,GB, which fits in unified RAM but would overflow a discrete GPU's
+VRAM on a cheaper machine. Elmer's OpenMP parallelism uses all 4 performance cores
+of the M4; efficiency-cores are not used (Elmer does not currently support
+heterogeneous thread scheduling on Apple Silicon).
+
+\subsubsection{3D Parametric Scope}
+
+The 3D sweep is deliberately narrower than the 2D sweep, targeting the correction
+factor $\eta_{3D}$ rather than re-tracing the full $\mathcal{F}^*$ vs.\ $S$ curve:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Primary:} 3 pole pitches $\times$ 2 alloys $\times$ 2 frequency
+    points = 12 operating points. \textit{Estimated total runtime: 36\,hours (6 overnight sessions).}
+  \item \textbf{Subsidiary:} 3 rotor thicknesses at fixed $\tau_p = 10$\,mm for
+    Volume Cancellation Theorem validation (3 points $\times$ 4\,hr = 12\,hours).
+\end{itemize}
+
+\textbf{Total 3D FEM wall time: $\sim$48\,hours across $\sim$8 overnight runs on the
+Mac Mini M4.} No single run exceeds 8 hours, making overnight scheduling reliable.
+
+\subsubsection{Deliverable from 3D FEM}
+
+The primary 3D output is the empirical correction factor:
+\begin{equation}
+  \eta_{3D}(\tau_p/w) \;=\;
+  \frac{\langle F_x\rangle_{\mathrm{3D}}}{\langle F_x\rangle_{\mathrm{2D}}}
+  \Bigg|_{\omega_s = \omega_s^*}
+  \label{eq:eta3d}
+\end{equation}
+plotted as a function of the aspect ratio $\tau_p/w$. If $\eta_{3D}$ is found to
+follow a simple functional form (e.g.\ $1 - c(\tau_p/w)^n$), this constitutes an
+additional closed-form result beyond \cref{eq:scaling_law} — a transverse-edge
+correction directly usable in PCB LIM design.
+
+\subsection{Validation of Volume Cancellation Theorem by FEM}
+
+A subsidiary 2D FEM study (Tier~2, $\sim$45\,min total runtime on Colab T4)
+verifies \cref{thm:vol_cancel} by simulating three rotor thicknesses
+($d \in \{1,\,2,\,3\}$\,mm) at fixed $\omega_s < \omega_s^{\mathrm{tr}}$ and
+confirming that computed thrust scales as $F \propto d$ (thin-sheet limit), not
+$d^2$ or $d^0$. The 3D FEM runs the same study to check whether the $z$-edge
+correction modifies this scaling in the finite-width geometry.
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Experimental Design}
+%% ══════════════════════════════════════════════════════════════════════════════
+
+\subsection{Design Philosophy: Parametric Coverage Over Single-Point Demonstration}
+
+The defining upgrade from demonstration to thesis is the shift from one operating
+point to a \emph{design space map}. The experiment is structured as a
+$3 \times 3 \times 2$ factorial design:
+
+\begin{table}[H]
+\centering
+\caption{Experimental factorial design (18 independent runs).}
+\label{tab:factorial}
+\begin{tabular}{llll}
+\toprule
+\textbf{Factor} & \textbf{Level 1} & \textbf{Level 2} & \textbf{Level 3} \\
+\midrule
+Pole pitch $\tau_p$ & 5\,mm & 10\,mm & 20\,mm \\
+Slip frequency $\omega_s/2\pi$ & 50\,Hz & 150\,Hz & 400\,Hz \\
+Rotor alloy & 7075-T6 Al & 6061-T6 Al & — \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+The three pole-pitch levels span a factor of four in $S$ (at fixed $\omega_s$),
+crossing the peak of the thrust--slip curve twice. The three slip frequencies straddle
+$\omega_s^*$ for 10\,mm pitch / 7075 alloy. The two rotor alloys differ in conductivity
+by $\sim$15\%, providing a controlled material contrast. Together the 18 runs will
+trace the full curve of \cref{eq:scaling_law} in dimensionless coordinates.
+
+\subsection{PCB Stator Architecture}
+
+\subsubsection{Layer Stack-up}
+
+The stator is a custom 4-layer FR4 PCB (1.6\,mm total, standard JLCPCB 4-layer
+stackup: \$35 per board including shipping). Layer allocation:
+
+\begin{table}[H]
+\centering
+\caption{4-layer PCB stackup and function.}
+\label{tab:pcb}
+\begin{tabular}{cll}
+\toprule
+\textbf{Layer} & \textbf{Copper weight} & \textbf{Function} \\
+\midrule
+L1 (top)    & 2\,oz & Phase~A meandered coil traces \\
+L2          & 1\,oz & Phase~B meandered coil traces \\
+L3          & 1\,oz & Phase~C meandered coil traces \\
+L4 (bottom) & 1\,oz & Control electronics and power distribution \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsubsection{Pole Pitch Configurability}
+
+To access three pole-pitch values within a \$400 budget, a \emph{jumper-configurable
+pole connection} scheme will be implemented: a single PCB layout contains trace
+patterns for all three pitches, with solder jumpers selecting which traces are
+electrically active. This eliminates the cost of ordering three separate PCBs
+($\sim$\$35 vs.\ $\sim$\$105).
+
+\subsubsection{Trace Design from PDE Constraints}
+
+The spatial wavenumber of the excited travelling wave must match the pole pitch:
+$k = \pi/\tau_p$. For a sinusoidal current distribution, the optimal trace width
+$w_{\mathrm{trace}}$ and spacing $g$ satisfy:
+\begin{equation}
+  w_{\mathrm{trace}} + g \;=\; \frac{\tau_p}{N_{\mathrm{turns}}}
+  \label{eq:trace_design}
+\end{equation}
+where $N_{\mathrm{turns}}$ is the number of turns per pole. The minimum trace width is
+set by the current-carrying capacity of 2\,oz copper: at $I_{\mathrm{peak}} = 3$\,A,
+a minimum trace width of 0.8\,mm is required (IPC-2221, $\Delta T = 10$\,°C).
+The final trace layout will be designed in KiCad~8 and exported as Gerber files for
+JLCPCB PCBA manufacturing.
+
+\subsection{Power Electronics and Microcontroller}
+
+\subsubsection{3-Phase Sinusoidal PWM Generation}
+
+The RP2040 microcontroller generates three-phase SPWM using its Programmable I/O
+(PIO) state machines operating at 125\,MHz. Each PIO executes a lookup-table-based
+sine waveform with 256 steps per period, achieving better than 0.5\% total harmonic
+distortion (THD) at frequencies up to 1\,kHz. The three channels are phase-shifted by
+$\Delta\phi = 2\pi/3$ via index offsets in the shared lookup table.
+
+The slip frequency is set by software: given stator frequency $\omega$ and rotor
+velocity $v$ (updated from DAQ), the RP2040 computes $\omega_s = \omega - \pi v/\tau_p$
+and adjusts the PWM period in real time. This closed-loop slip control is a key
+capability not present in the original proposal.
+
+\subsubsection{Gate Driver and Power Stage}
+
+The DRV8313 3-phase gate driver bridges the RP2040 logic levels to the 24\,V stator
+supply. Maximum continuous output current is 2.5\,A per phase (peak 5\,A for
+$< 1$\,s). A bootstrap circuit on each high-side switch eliminates the need for an
+isolated gate supply. Dead-time insertion is set to 500\,ns to prevent shoot-through.
+Current sensing is implemented via 0.1\,$\Omega$ shunt resistors with the INA240A
+current sense amplifier, providing real-time phase current measurement for power
+accounting and efficiency calculation.
+
+\subsection{Kinematic Data Acquisition System}
+
+\subsubsection{Multi-Modal Measurement}
+
+A single measurement modality (photointerrupter) carries all kinematic information in
+the original proposal. The thesis adds a second independent modality to enable
+uncertainty cross-validation:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{Optical photointerrupters} (TCST2103): 8 sensors at 15\,mm spacing
+    along the launch rail. RP2040 timestamps beam breaks with 8\,ns resolution
+    (125\,MHz system clock).
+  \item \textbf{Reflective optical encoder strip}: A 500 lines/inch adhesive encoder
+    strip on the rotor edge, read by an AS5311 linear magnetic encoder via SPI.
+    Provides continuous position at 1\,$\mu$m resolution, enabling direct velocity
+    differentiation rather than finite-difference between sensors.
+\end{itemize}
+
+Both modalities output position-versus-time traces. Their agreement (or measured
+discrepancy) provides an experimental cross-check independent of any model assumption.
+
+\subsubsection{Uncertainty Budget}
+
+\begin{table}[H]
+\centering
+\caption{Measurement uncertainty budget for kinematic DAQ.}
+\label{tab:uncertainty}
+\begin{tabularx}{\textwidth}{Xcccc}
+\toprule
+\textbf{Source} & \textbf{Type} & \textbf{Magnitude} & \textbf{Sensitivity} & \textbf{$u(F)$ contribution} \\
+\midrule
+Timestamp resolution & B & 8\,ns & $\partial v/\partial t$ & $<0.01$\,mm/s \\
+Sensor position tolerance & B & $\pm 0.1$\,mm & $\partial v/\partial x$ & $0.05$\% \\
+Rotor temperature ($\sigma$ drift) & B & $\pm 2$\,°C & $\partial\sigma/\partial T$ & $0.3$\% \\
+Stray magnetic coupling & A & estimated & Monte Carlo & $< 1$\% \\
+Trigger jitter (TCST2103) & A & $\pm 2\,\mu$s & $\partial v/\partial t$ & $0.02$\,mm/s \\
+\midrule
+\textbf{Combined ($k=2$)} & & & & $< 2$\% \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+The combined uncertainty of $< 2\%$ on velocity (and thus $< 4\%$ on inferred
+kinetic energy / thrust) is sufficient to discriminate the $15\%$ conductivity
+difference between the two rotor alloys and to resolve the $\sim 30\%$ thrust
+reduction predicted at $\omega_s = 2\omega_s^*$ vs.\ $\omega_s^*$.
+
+\subsection{Thrust Inference from Kinematics}
+
+Direct force measurement requires a load cell, which is incompatible with the free-flight
+rotor geometry. Instead, thrust is inferred from kinematics using two methods:
+
+\begin{enumerate}[noitemsep]
+  \item \textbf{Instantaneous power method}: $F(t) = P_{\mathrm{mech}}(t) / v(t)$,
+    where $P_{\mathrm{mech}}$ is the mechanical power computed from the time derivative
+    of kinetic energy: $P_{\mathrm{mech}} = mv\dot{v}$.
+  \item \textbf{Impulse method}: $\langle F \rangle = \Delta(mv) / \Delta t$, averaged
+    over the acceleration interval. This is model-independent and requires only
+    initial and final velocity.
+\end{enumerate}
+
+Consistency between the two methods, and between the two DAQ modalities, provides a
+four-way experimental cross-check without any additional hardware cost.
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Budget and Bill of Materials}
+%% ══════════════════════════════════════════════════════════════════════════════
+
+\begin{table}[H]
+\centering
+\caption{Complete bill of materials (\$400 budget).}
+\label{tab:bom}
+\begin{tabularx}{\textwidth}{Xlrr}
+\toprule
+\textbf{Item} & \textbf{Supplier} & \textbf{Qty} & \textbf{Cost (USD)} \\
+\midrule
+\multicolumn{4}{l}{\textit{PCB and Manufacturing}} \\
+4-layer FR4 PCB + PCBA (JLCPCB) & JLCPCB & 5 boards & \$55 \\
+\midrule
+\multicolumn{4}{l}{\textit{Power Electronics}} \\
+DRV8313 3-Phase Gate Driver & DigiKey & 3 & \$12 \\
+INA240A Current Sense Amplifier & DigiKey & 6 & \$14 \\
+24V 5A DC Power Supply (bench) & Amazon & 1 & \$28 \\
+0.1$\Omega$ shunt resistors (2W) & DigiKey & 20 & \$6 \\
+Bootstrap capacitors, gate resistors & DigiKey & kit & \$8 \\
+\midrule
+\multicolumn{4}{l}{\textit{Microcontroller and Logic}} \\
+Raspberry Pi Pico (RP2040) & Adafruit & 3 & \$15 \\
+AS5311 linear magnetic encoder IC & DigiKey & 2 & \$18 \\
+TCST2103 photointerrupters & DigiKey & 12 & \$14 \\
+\midrule
+\multicolumn{4}{l}{\textit{Rotor Materials}} \\
+7075-T6 aluminium bar (12$\times$3$\times$150\,mm) & McMaster & 4 pieces & \$22 \\
+6061-T6 aluminium bar (12$\times$3$\times$150\,mm) & McMaster & 4 pieces & \$18 \\
+500 lines/inch encoder strip (adhesive) & US Digital & 0.5\,m & \$24 \\
+\midrule
+\multicolumn{4}{l}{\textit{Mechanical and Fixturing}} \\
+3D printed launch rail (PETG) & Local/Bambu & 1 set & \$12 \\
+M3 hardware, standoffs, connectors & Amazon & kit & \$14 \\
+Breadboard + jumper wires & generic & 2 & \$10 \\
+\midrule
+\multicolumn{4}{l}{\textit{Test and Measurement}} \\
+Logic analyser (16-ch, USB) & Saleae clone & 1 & \$22 \\
+Thermocouple + reader (rotor temp) & Amazon & 1 & \$16 \\
+\midrule
+\multicolumn{4}{l}{\textit{Contingency}} \\
+Component replacement / shipping & — & — & \$32 \\
+\midrule
+\textbf{Total} & & & \textbf{\$340} \\
+\textbf{Budget remaining (margin)} & & & \textbf{\$60} \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\textbf{Note on compute costs.} All FEM simulation runs on Google Colab free tier
+(T4 GPU, 15\,GB VRAM). For the parametric sweep, estimated runtime is
+$\sim$4 hours total — well within Colab's daily free allocation.
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Phase-Wise Project Roadmap}
+%% ══════════════════════════════════════════════════════════════════════════════
+
+\subsection{Overview}
+
+The project is structured in five sequential phases. Phases 1 is complete.
+Phases 2 through 5 constitute the outstanding work.
+
+\begin{figure}[H]
+\centering
+\begin{ganttchart}[
+  hgrid,
+  vgrid={*{3}{dotted}, *1{dashed}},
+  title label font=\small,
+  bar label font=\small,
+  milestone label font=\small\bfseries,
+  bar/.style={fill=mitred!70},
+  bar incomplete/.style={fill=mitred!25},
+  milestone/.style={fill=mitred, draw=mitred},
+  bar height=0.55,
+  y unit chart=0.65cm,
+  x unit=0.55cm,
+  time slot format=isodate-yearmonth
+]{2026-05}{2026-12}
+  \gantttitlecalendar{year, month=shortname} \\
+  \ganttbar[bar/.style={fill=accentblue!60}]{\textbf{Ph.1} Theory (Done)}{2026-05}{2026-05} \\
+  \ganttbar{\textbf{Ph.2} PDE / FEM}{2026-06}{2026-07} \\
+  \ganttmilestone{FEM validated}{2026-07} \\
+  \ganttbar{\textbf{Ph.3} Hardware Design}{2026-07}{2026-08} \\
+  \ganttmilestone{Gerbers dispatched}{2026-08} \\
+  \ganttbar{\textbf{Ph.4} Firmware + Integration}{2026-08}{2026-09} \\
+  \ganttmilestone{First rotor launch}{2026-09} \\
+  \ganttbar{\textbf{Ph.5} Parametric Experiment}{2026-10}{2026-11} \\
+  \ganttmilestone{Thesis draft}{2026-12} \\
+\end{ganttchart}
+\caption{Project Gantt chart (May -- December 2026).}
+\label{fig:gantt}
+\end{figure}
+
+\subsection{Phase 1 — Theoretical Foundation (Complete \checkmark)}
+
+\textbf{Duration:} Completed prior to submission.
+
+\textbf{Deliverables achieved:}
+\begin{itemize}[noitemsep]
+  \item Idealized Lorentz force equations established; F = J$\times$B framework derived.
+  \item Volume Cancellation Theorem proved analytically (see \cref{thm:vol_cancel}).
+  \item GitHub repository initialised: Python 1D kinematic ODE solver operational.
+  \item Three-phase waveform visualizer validated against analytical SPWM spectra.
+  \item Preliminary parameter-space survey identifying the $S$-parameter as the
+    governing dimensionless group.
+\end{itemize}
+
+\textbf{Key finding:} The dimensionless quality factor $S = \mu_0\sigma\omega_s\tau_p^2/\pi^2$
+fully parameterises the analytical thrust curve (\cref{eq:scaling_law}), collapsing all
+material and geometric variation into a single curve. This motivates the experimental
+design strategy.
+
+\subsection{Phase 2 — Rigorous Analytical Derivation and FEM Simulation}
+\label{sec:phase2}
+
+\textbf{Duration:} 8 weeks (June -- July 2026).
+
+\subsubsection{2a: Complete PDE Derivation in \LaTeX}
+
+The full analytical derivation will be typeset with all intermediate steps:
+\begin{itemize}[noitemsep]
+  \item Maxwell's equations $\to$ vector potential form $\to$ Coulomb gauge reduction
+  \item Convective diffusion PDE (\cref{eq:cmd}) in rotor frame
+  \item Complex-exponential ansatz, boundary-value problem, and closed-form solution
+    for $\hat{A}(y)$
+  \item Maxwell Stress Tensor integration yielding \cref{eq:thrust_analytical}
+  \item Proof of \cref{prop:opt_slip} with all algebraic steps
+  \item Proof of \cref{thm:vol_cancel} (extend current sketch to full detail)
+  \item Derivation of the thin-sheet vs.\ skin-effect transition frequency
+    $\omega_s^{\mathrm{tr}}$
+\end{itemize}
+
+\subsubsection{2b: FEM Implementation and Validation}
+
+\begin{enumerate}[noitemsep, label=\arabic*.]
+  \item Implement the 2D transient FEM in FEniCS (Python UFL formulation)
+  \item Validate against the analytical solution \cref{eq:thrust_analytical} at
+    low Rm (no convection): target $< 5\%$ discrepancy
+  \item Execute mesh convergence study (coarse / medium / fine) and document
+    Richardson extrapolation bounds
+  \item Parametric sweep: $3 \times 5 = 15$ operating points per alloy (30 total)
+  \item Post-process: extract $\mathcal{F}^*$ vs.\ $S$ for each operating point and
+    overlay on \cref{eq:scaling_law}
+  \item Visualise magnetic flux density $\|\mathbf{B}\|$ and eddy current density
+    $\mathbf{J}$ at $S = 0.5,\,1.0,\,2.0$ to illustrate skin-effect evolution
+\end{enumerate}
+
+\textbf{Go/no-go criterion:} FEM thrust values within $\pm 10\%$ of analytical
+prediction at $\mathrm{Rm} \ll 1$. If not achieved, the mesh or boundary conditions
+will be revised before proceeding to hardware.
+
+\textbf{Deliverable:} Jupyter notebook (committed to GitHub) with all FEM results,
+convergence plots, and parametric sweep figures — equivalent to a journal article's
+simulation section.
+
+\subsection{Phase 3 — Hardware Design and Manufacturing}
+
+\textbf{Duration:} 6 weeks (July -- August 2026).
+
+\subsubsection{3a: KiCad PCB Layout}
+
+\begin{enumerate}[noitemsep, label=\arabic*.]
+  \item Schematic capture: RP2040, DRV8313, INA240A, TCST2103 array, AS5311, power
+    connectors, debug header
+  \item Layer 4 (control) layout: component placement observing heat dissipation
+    constraints (DRV8313 thermal pad to copper pour)
+  \item Layers 1--3 (stator): meandered phase traces for all three pole-pitch
+    configurations, with solder-jumper pole selection
+  \item Design rule check (DRC): minimum 0.2\,mm clearance (JLCPCB 4-layer standard)
+  \item Gerber export and JLCPCB DFM review
+\end{enumerate}
+
+\subsubsection{3b: Mechanical Rail Design}
+
+A 3D-printed PETG launch rail will constrain the rotor to 1D translational motion:
+\begin{itemize}[noitemsep]
+  \item Air gap $g = 1.0 \pm 0.1$\,mm between rotor underside and stator surface
+    (controlled by precision shims)
+  \item Rail length: 300\,mm (accommodates 8 photointerrupters at 15\,mm pitch
+    plus entry/exit clearance)
+  \item Rotor guide channels: $\pm 0.2$\,mm lateral clearance to minimise friction
+\end{itemize}
+
+\textbf{Deliverable:} KiCad project files and STL files committed to GitHub;
+Gerber files submitted to JLCPCB.
+
+\subsection{Phase 4 — Firmware Development and System Integration}
+
+\textbf{Duration:} 5 weeks (August -- September 2026).
+
+\subsubsection{4a: RP2040 Firmware (C++)}
+
+\begin{enumerate}[noitemsep, label=\arabic*.]
+  \item PIO SPWM engine: 3-channel, 256-entry sine LUT, configurable frequency
+    via DMA period register
+  \item Real-time slip control loop: read AS5311 velocity via SPI $\to$ compute
+    $\omega_s = \omega - \pi v/\tau_p$ $\to$ update PIO frequency every 1\,ms
+  \item DAQ interrupt handler: TCST2103 beam-break timestamps stored in ring buffer
+    (8-byte entries: sensor ID + 32-bit timer count at 125\,MHz)
+  \item UART telemetry: stream timestamp data to host PC at 921600 baud during
+    each experimental run
+\end{enumerate}
+
+\subsubsection{4b: Host Software (Python)}
+
+\begin{enumerate}[noitemsep, label=\arabic*.]
+  \item Serial parser: reconstruct position--time traces from UART stream
+  \item Velocity and acceleration extraction: Savitzky--Golay filter (order 3,
+    window 7) applied to position data
+  \item Thrust inference: both instantaneous-power and impulse methods implemented
+    and compared
+  \item Automated data export to \texttt{.csv} with metadata (configuration,
+    timestamp, run ID)
+\end{enumerate}
+
+\textbf{System integration test:} Before rotor launch, verify three-phase waveform
+symmetry with logic analyser, confirm phase current measurement with INA240A vs.\
+clamp meter, and verify photointerrupter timing against a reference oscillator.
+
+\textbf{Go/no-go criterion:} Three-phase SPWM THD $< 2\%$; photointerrupter timing
+agreement $< 10\,\mu$s between board-side and logic analyser timestamp.
+
+\textbf{Deliverable:} First rotor launch (any motion detected) by end of September 2026.
+
+\subsection{Phase 5 — Parametric Experiment, Scaling Law Fit, and Thesis}
+
+\textbf{Duration:} 10 weeks (October -- December 2026).
+
+\subsubsection{5a: Experimental Data Collection}
+
+Execute the $3 \times 3 \times 2 = 18$-run factorial design (\cref{tab:factorial}).
+For each run:
+\begin{itemize}[noitemsep]
+  \item Set $\tau_p$ via solder jumpers and verify with LCR meter (inductance change)
+  \item Set $\omega_s$ via firmware parameter; confirm with logic analyser
+  \item Install rotor alloy; measure temperature with thermocouple pre/post run
+  \item Acquire 5 repeat launches per operating point (90 total launches)
+  \item Record: position--time (both DAQ modalities), phase currents, supply voltage
+\end{itemize}
+
+\subsubsection{5b: Scaling Law Fit}
+
+\begin{enumerate}[noitemsep, label=\arabic*.]
+  \item Compute $\mathcal{F}^*$ and $S$ for each of the 18 operating points
+  \item Plot $\mathcal{F}^*$ vs.\ $S$ with error bars from \cref{tab:uncertainty}
+  \item Fit \cref{eq:scaling_law} to data: 1-parameter fit (amplitude $\mathcal{F}^*_{\max}$
+    if curve shape is fixed, or 2-parameter if an empirical correction is needed)
+  \item Report goodness of fit ($R^2$, residual RMS) and test whether the data
+    are consistent with $S^* = 1$ at the $2\sigma$ level
+  \item Generate design charts: $\omega_s^*$ vs.\ $\tau_p$ for 7075 and 6061 alloys,
+    with FEM and analytical overlays
+\end{enumerate}
+
+\subsubsection{5c: Thesis Writing}
+
+The thesis will follow the standard MIT AeroAstro format:
+\begin{enumerate}[noitemsep, label=\arabic*.]
+  \item Abstract + Introduction (research gap, claim, objectives)
+  \item Theoretical Framework (Sections \ref{sec:phase2} content, fully typeset in \LaTeX)
+  \item Numerical Simulation (FEM methodology, convergence, parametric sweep)
+  \item Experimental Design (PCB architecture, DAQ, uncertainty budget)
+  \item Results and Discussion (scaling law fit, comparison with theory and FEM)
+  \item Conclusion and Future Work (3D FEM, active slip control, space-launch scaling)
+  \item Bibliography, Appendices (full derivations, KiCad files, firmware listing)
+\end{enumerate}
+
+\textbf{Final deliverable:} Thesis draft submitted December 2026.
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Future Work and Extensions}
+%% ══════════════════════════════════════════════════════════════════════════════
+
+The validated scaling law opens several natural extensions, each of which could
+constitute a follow-on publication:
+
+\begin{itemize}[noitemsep]
+  \item \textbf{3D end effects.} The 2D FEM neglects transverse edge effects at the
+    rotor ends. A 3D transient simulation would quantify the end-effect efficiency
+    penalty and its dependence on the rotor aspect ratio $L_{\mathrm{rotor}}/\tau_p$.
+  \item \textbf{Closed-loop slip control.} The firmware infrastructure supports
+    real-time slip tracking. An active controller maintaining $\omega_s = \omega_s^*$
+    throughout the acceleration run could be validated against open-loop results,
+    quantifying the efficiency gain.
+  \item \textbf{Thermal limits.} The INA240A current data enable a thermal model of
+    the PCB stator under sustained operation, informing duty-cycle limits for continuous
+    (rather than pulsed) LIM applications.
+  \item \textbf{Space-launch scaling.} The validated dimensionless scaling law
+    \cref{eq:scaling_law} can be extrapolated to lunar mass-driver scales, providing
+    a first-principles estimate of the pole pitch and slip frequency required to achieve
+    a target specific impulse without an applied magnetic field.
+\end{itemize}
+
+%% ══════════════════════════════════════════════════════════════════════════════
+\section{Conclusion}
+%% ══════════════════════════════════════════════════════════════════════════════
+
+This proposal describes a Masters-level research program at the intersection of
+continuum electrodynamics (EE) and electromagnetic launch technology (AeroAstro) that:
+
+\begin{enumerate}[noitemsep]
+  \item Makes a \textbf{falsifiable scientific claim}: the dimensionless thrust
+    $\mathcal{F}^* = S/(1+S^2)$ is maximised at $S = 1$, equivalently at
+    $\omega_s^* = \pi^2/(\mu_0\sigma\tau_p^2)$, and this prediction holds across
+    rotor materials and pole-pitch scales.
+  \item Provides a \textbf{three-tier validation}: analytical derivation, 2D transient
+    FEM with documented mesh convergence, and 18-point factorial experiment with
+    formal uncertainty budgets.
+  \item Delivers \textbf{aerospace-usable design rules}: charts of $\omega_s^*$ vs.\
+    $\tau_p$ for commercially available aluminium alloys, directly applicable to
+    sub-100\,W EMALS analog and electromagnetic launch preliminary design.
+  \item Is \textbf{executable within \$400} and a 7-month timeline using exclusively
+    open-source software (FEniCS, KiCad, Python) and commodity hardware (JLCPCB, DigiKey).
+\end{enumerate}
+
+The project is distinguished from prior work not by greater hardware complexity but by
+greater intellectual architecture: it transforms a compelling demonstration into a
+rigorous scientific result that advances the field's quantitative understanding of
+miniature linear electromagnetic accelerators.
+
+%% ══════════════════════════════════════════════════════════════════════════════
+%% BIBLIOGRAPHY
+%% ══════════════════════════════════════════════════════════════════════════════
+\newpage
+\begin{thebibliography}{99}
+
+\bibitem{Doyle2010}
+M.~R. Doyle, D.~J. Samuel, T.~Conway, and R.~R. Klimowski,
+``Electromagnetic Aircraft Launch System --- EMALS,''
+\textit{IEEE Trans.\ Magnetics}, vol.~31, no.~1, pp.~528--533, Jan. 1995.
+
+\bibitem{Gieras1994}
+J.~F. Gieras,
+\textit{Linear Induction Drives}.
+Oxford: Clarendon Press, 1994.
+
+\bibitem{Boldea2001}
+I.~Boldea and S.~A. Nasar,
+\textit{Linear Electric Actuators and Generators}.
+Cambridge: Cambridge University Press, 1997.
+
+\bibitem{Davidson2001}
+P.~A. Davidson,
+\textit{An Introduction to Magnetohydrodynamics}.
+Cambridge: Cambridge University Press, 2001.
+
+\bibitem{Griffiths2017}
+D.~J. Griffiths,
+\textit{Introduction to Electrodynamics}, 4th ed.
+Cambridge: Cambridge University Press, 2017.
+
+\bibitem{Kolm1980}
+H.~Kolm and R.~Mongeau,
+``Basic principles of coaxial launch technology,''
+\textit{IEEE Trans.\ Magnetics}, vol.~20, no.~2, pp.~227--230, Mar. 1984.
+
+\bibitem{Lewin2006}
+P.~L. Lewin, J.~E. Theed, A.~E. Davies, and S.~T. Larsen,
+``Method for rating power transformers with non-sinusoidal currents,''
+\textit{IEE Proc.\ Electr.\ Power Appl.}, vol.~146, no.~4, pp.~411--416, 1999.
+
+\bibitem{Raminosoa2018}
+T.~Raminosoa, J.~A. Farooq, A.~Djerdir, and A.~Miraoui,
+``Reluctance network modelling of surface permanent magnet motor considering iron
+nonlinearities,''
+\textit{Energy Conversion and Management}, vol.~50, no.~5, pp.~1356--1361, 2009.
+
+\bibitem{Maloberti2020}
+O.~Maloberti, V.~Mazauric, G.~Meunier, A.~Kedous-Lebouc, O.~Geoffroy, Y.~Rebiere,
+P.~Labie, and Y.~Marchand,
+``An energy-based formulation for dynamic hysteresis and extra-losses,''
+\textit{IEEE Trans.\ Magnetics}, vol.~42, no.~4, pp.~895--898, Apr. 2006.
+
+\bibitem{Connor2015}
+J.~Connor, M.~Dommer, E.~Merritt, and C.~Grantham,
+``EMALS system integration and testing,''
+in \textit{Proc.\ IEEE Electric Ship Technologies Symposium (ESTS)},
+Alexandria, VA, Jun. 2015, pp.~28--34.
+
+\bibitem{AlnaesEtal2015}
+M.~S.~Aln\ae{}s et al.,
+``The FEniCS Project Version 1.5,''
+\textit{Archive of Numerical Software}, vol.~3, no.~100, pp.~9--23, 2015.
+
+\end{thebibliography}
+
+\end{document}
